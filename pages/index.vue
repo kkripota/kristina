@@ -22,8 +22,8 @@
       </option>
       </select>
   </div>
-  <div class="col-md-3">
-  <select class="form-select"  v-model="sortBy" >
+    <div class="col-md-3">
+      <select class="form-select" v-model="sortBy">
         <option value="name">Select by Name</option>
         <option value="year">Select by Year</option>
         <option value="rating">Select by Rating</option>
@@ -60,9 +60,12 @@
           <span aria-hidden="true">&laquo;</span>
         </a>
       </li>
-      <li class="page-item"><a class="page-link" href="#">1</a></li>
-      <li class="page-item"><a class="page-link" href="#">2</a></li>
-      <li class="page-item"><a class="page-link" href="#">3</a></li>
+      <li class="page-item" 
+      v-for="page in Math.ceil(filmsStore.total/filmsStore.size)"
+      :key="page"><a 
+      class="page-link" 
+      href="#"
+      @click.prevent="filmsStore.changePage(page)">{{ page }}</a></li>
       <li class="page-item">
         <a class="page-link" href="#" aria-label="Next">
           <span aria-hidden="true">&raquo;</span>
@@ -73,9 +76,15 @@
 </template>
 
 <script lang="ts" setup>
+import { useFilmsStore } from '~/stores/useFilmsStore';
+import { useCategoriesStore } from '~/stores/useCategoriesStore';
+import { useCountriesStore } from '~/stores/useCountriesStore';
+
+
 const filmsStore = useFilmsStore();
 const categoriesStore = useCategoriesStore();
 const countriesStore = useCountriesStore();
+
 
 const category = ref(null);
 watch(category, (newCategory) => {
@@ -92,12 +101,16 @@ watch(sortBy, (newSortBy) => {
   filmsStore.addSortToParams(newSortBy);
 });
 
+
 const resetParams = () => {
   category.value = null;
   country.value = null;
   sortBy.value = 'name';
   filmsStore.fetchFilms();
 }
+
+
+
 
 
 filmsStore.fetchFilms();
@@ -107,3 +120,8 @@ categoriesStore.fetchCategories();
 <style>
 
 </style>
+
+
+<div class="spinner-border text-secondary" role="status">
+  <span class="visually-hidden">Loading...</span>
+</div>
