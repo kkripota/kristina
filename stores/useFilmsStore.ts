@@ -5,6 +5,7 @@ export const useFilmsStore = defineStore('films', () => {
   const films = ref([]);
   const page = ref(1);
   const total = ref(0);
+  const isLoading = ref(true);
   const size = 3;
 
   const params: {
@@ -36,15 +37,21 @@ export const useFilmsStore = defineStore('films', () => {
 
   function addCountryToParams(country:number|null) {
     params.country = country;
+    page.value = 1;
+    params.page = 1;
     fetchFilms();
   }
 
   function addCategoryToParams(category:number|null) {
     params.category = category;
+    page.value = 1;
+    params.page = 1;
     fetchFilms();
   }
 
   async function fetchFilms() {
+    isLoading.value = await api.get('/films', {params});
+    isLoading.value = false;
     const response = await api.get('/films', {params});
     films.value = response.data.films;
     total.value = response.data.total;
@@ -60,5 +67,6 @@ export const useFilmsStore = defineStore('films', () => {
     size,
     page,
     changePage,
+    isLoading,
   }
 })

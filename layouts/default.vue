@@ -1,18 +1,32 @@
+<script lang="ts" setup>
+const authStore = useAuthStore();
+</script>
+
+
+
 <template>
-  <nav class="navbar bg-body-tertiary">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#">
-          <img src="~/public/1.svg" alt="Logo" width="35" height="35" class="d-inline-block align-text-top">inoTower
-        </a>
-        <div class="d-flex">
-          <button class="btn btn-outline-primary me-3">SignUp</button>
-          <button class="btn btn-outline-success">SignIn</button>
+    <nav class="navbar bg-body-tertiary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">
+            <img src="~/public/1.svg" alt="Logo" width="35" height="35" class="d-inline-block align-text-top">inoTower
+          </a>
+          <div class="d-flex align-items-center">
+            <template v-if="!authStore.authData">
+              <button @click="$router.push('/signup')" class="btn btn-outline-primary me-3">SignUp</button>
+              <button @click="$router.push('/signin')" class="btn btn-outline-success">SignIn</button>
+            </template>
+            <template v-else>
+              <a href="#" class="link-offset-1 pe-2">{{ authStore.authData.fio }}</a>
+              <button  @click="authStore.signout()" class="btn btn-outline-primary me-3">SignOut</button>
+            </template>
+          </div>
         </div>
-      </div>
-    </nav>
-<div class="container" py-2>
+      </nav>
 
 
+
+
+<div class="container py-2 mb-auto" style="min-height: calc(100vh-190px);"> 
       <slot />
     </div>
       <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top fixed-bottom">
@@ -30,3 +44,9 @@
           </ul>
         </footer>
 </template>
+
+<style>
+.container {
+  min-height: calc(100vh - 40px - 150px);
+}
+</style>

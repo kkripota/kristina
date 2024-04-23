@@ -33,8 +33,13 @@
     <button class="btn btn-outline-warning" @click="resetParams">Сбросить</button>
   </div>
   </div>
+<!--Spinners-->
+<div class="spinner-border" role="status" v-if="filmsStore.isLoading">
+  <span class="visually-hidden">Loading...</span>
+</div>
 
-  <div class="row row-cols-1 row-cols-md-3 g-4">
+<template v-else>
+  <div class="row row-cols-1 row-cols-md-3 g-4" >
     <div class="col" v-for="film in filmsStore.films" :key="film.id">
       <div class="card h-100">
         <img :src="film.link_img" class="card-img-top" alt="...">
@@ -44,7 +49,7 @@
           <p class="card-text" v-if="film.categories.length != 0">
             <template v-for="(genre, index) in film.categories" :key="genre.id">{{(index != film.categories.length - 1) ? genre.name+', ' : genre.name }}
           </template></p>
-          <p class="card-text" v-else>Нет жанра</p>
+          <p class="card-text" v-else>Нет жанров у этого шедевра</p>
         </div>
         <div class="card-footer text-end">
           <button class="btn btn-outline-primary">Смотреть</button>
@@ -52,27 +57,36 @@
     </div>
 </div>
   </div>
+  
 <!--Pagination list films-->
   <nav aria-label="Page navigation example" class="mt-4 d-flex justify-content-center">
     <ul class="pagination">
       <li class="page-item">
-        <a class="page-link" href="#" aria-label="Previous">
-          <span aria-hidden="true">&laquo;</span>
+        <a class="page-link" 
+        :class="{'disabled': filmsStore.page-1 == 0}"
+        href="#" aria-label="Previous"
+        @click.prevent="filmsStore.changePage(filmsStore.page-1)">
+        <span aria-hidden="true">&raquo;</span>
         </a>
       </li>
-      <li class="page-item" 
+      <li class="page-item"
       v-for="page in Math.ceil(filmsStore.total/filmsStore.size)"
       :key="page"><a 
-      class="page-link" 
+      class="page-link"
+      :class="{'active': page == filmsStore.page}"
       href="#"
       @click.prevent="filmsStore.changePage(page)">{{ page }}</a></li>
       <li class="page-item">
-        <a class="page-link" href="#" aria-label="Next">
+        <a class="page-link" 
+        :class="{'disabled': filmsStore.page+1 == 0}"
+        href="#" aria-label="Next"  
+        @click.prevent="filmsStore.changePage(filmsStore.page+1)">
           <span aria-hidden="true">&raquo;</span>
         </a>
       </li>
     </ul>
   </nav>
+</template>
 </template>
 
 <script lang="ts" setup>
@@ -122,6 +136,5 @@ categoriesStore.fetchCategories();
 </style>
 
 
-<div class="spinner-border text-secondary" role="status">
-  <span class="visually-hidden">Loading...</span>
-</div>
+
+
