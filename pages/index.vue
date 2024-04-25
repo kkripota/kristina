@@ -34,8 +34,10 @@
   </div>
   </div>
 <!--Spinners-->
-<div class="spinner-border" role="status" v-if="filmsStore.isLoading">
-  <span class="visually-hidden">Loading...</span>
+<div class="d-flex justify-content-center" v-if="filmsStore.isLoading">
+  <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
 </div>
 
 <template v-else>
@@ -52,7 +54,7 @@
           <p class="card-text" v-else>Нет жанров у этого шедевра</p>
         </div>
         <div class="card-footer text-end">
-          <button class="btn btn-outline-primary">Смотреть</button>
+          <button @click="$router.push('/film/'+film.id)" class="btn btn-outline-primary">Смотреть</button>
       </div>
     </div>
 </div>
@@ -134,7 +136,3 @@ categoriesStore.fetchCategories();
 <style>
 
 </style>
-
-
-
-

@@ -1,3 +1,37 @@
+<script lang="ts" setup>
+const authStore = useAuthStore();
+const gendersStore = useGendersStore();
+const router = useRouter();
+const email = ref('');
+const fio = ref('');
+const birthday = ref('');
+const password = ref('');
+const gender = ref(1);
+const errorMsg = ref('');
+
+const signup = async () => {
+  if (fio.value && 
+  email.value && 
+  password.value &&
+  birthday.value && 
+  gender.value){
+    try {
+      await authStore.signup({
+        fio: fio.value,
+        email: email.value,
+        password: password.value,
+        birthday: birthday.value,
+        gender_id: gender.value
+        });
+      router.push('/');
+    } catch(error: any) {
+      errorMsg.value = error.message;
+    }
+  }
+};
+</script>
+
+
 <template>
   <main class="form-signup w-100 m-auto">
     <form @submit.prevent="signup">
@@ -41,28 +75,7 @@
   </main>
 </template>
 
-<script lang="ts" setup>
-const authStore = useAuthStore();
-const gendersStore = useGendersStore();
-const router = useRouter();
-const email = ref('');
-const fio = ref('');
-const birthday = ref('');
-const password = ref('');
-const gender = ref(1);
-const errorMsg = ref('');
 
-const signup = async () => {
-  if (email.value && password.value){
-    try {
-      await authStore.signup(email.value, password.value);
-      router.push('/');
-    } catch(error: any) {
-      errorMsg.value = error.message;
-    }
-  }
-};
-</script>
 
 <style>
 .form-signup {

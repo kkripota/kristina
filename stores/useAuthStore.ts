@@ -15,6 +15,16 @@ export const useAuthStore = defineStore('auth', ()=> {
     }
   }
 
+  
+  async function signup(dataSignup:any) {
+    try {
+      const res = await api.post('/auth/signup', dataSignup);
+      saveAuthData(res.data)
+    } catch(error:any) {
+      throw new Error(error.response.data.message);
+    }
+  }
+
   async function signout() {
     await api.post('/auth/signout', null, {
     headers: {
@@ -36,7 +46,7 @@ export const useAuthStore = defineStore('auth', ()=> {
 
   function readAuthData() {
     if (authCookie.value) {
-      authData.value = JSON.parse (atob(authCookie.value));
+      authData.value = JSON.parse(atob(authCookie.value));
     }
   }
   readAuthData();
@@ -45,5 +55,6 @@ export const useAuthStore = defineStore('auth', ()=> {
     authData,
     signin,
     signout,
+    signup
   }
 });
